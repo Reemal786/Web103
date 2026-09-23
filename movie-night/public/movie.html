@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"
+    >
+
+    <link rel="stylesheet" href="/style.css">
+
+    <title>Movie Night</title>
+</head>
+
+<body>
+
+    <main class="container">
+
+        <a href="/">← Back to Movie Night</a>
+
+        <article id="movie-details">
+            <!-- JavaScript will put the movie here -->
+        </article>
+
+    </main>
+
+    <script>
+        async function getMovie() {
+
+            // Get the movie ID from the URL
+            const movieId = window.location.pathname.split("/").pop();
+
+            // Request that movie from our server
+            const response = await fetch(`/api/movies/${movieId}`);
+
+            if (!response.ok) {
+                window.location.href = "/404.html";
+                return;
+            }
+
+            const movie = await response.json();
+
+            const movieDetails = document.getElementById("movie-details");
+
+            movieDetails.innerHTML = `
+                <img src="${movie.image}" alt="${movie.title} poster">
+
+                <h1>${movie.title}</h1>
+
+                <p><strong>Genre:</strong> ${movie.genre}</p>
+
+                <p><strong>Release Year:</strong> ${movie.year}</p>
+
+                <p><strong>Director:</strong> ${movie.director}</p>
+
+                <p><strong>Runtime:</strong> ${movie.runtime}</p>
+
+                <h3>About the Movie</h3>
+
+                <p>${movie.description}</p>
+            `;
+        }
+
+        getMovie();
+    </script>
+
+</body>
+</html>
